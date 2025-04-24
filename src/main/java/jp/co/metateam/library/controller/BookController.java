@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import jp.co.metateam.library.model.Account;
+import jp.co.metateam.library.model.AccountDto;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.service.BookMstService;
@@ -48,7 +50,73 @@ public class BookController {
             model.addAttribute("bookMstDto", new BookMstDto());
         }
 
-        return "book/add";
+        return "book/add"; //書籍登録画面
     }
     
+    //新しく
+ @PostMapping("/book/add")
+    public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra, Model model) {
+
+            try {
+            boolean errTitleFlg = false;
+            boolean errIsbnFlg = false;
+            String title = bookMstDto.getTitle();
+            String isbn = bookMstDto.getIsbn();
+
+                //書籍名が空値・nullかチェック
+            if(title == null || title.trim().isEmpty()){
+                result.rejectValue("title", "error.value", "書籍名は必須です");
+                errTitleFlg = true; //エラーだったらtrue
+            }
+                //書籍名255文字以内かチェック
+            if (title.length() > 255) {
+                result.rejectValue("title", "error.length", "書籍名は255文字以内で入力してください");
+                errTitleFlg = true;
+            }
+                // ISBNがnullかチェック
+            if(isbn == null){
+                result.rejectValue("isbn", "error.value", "ISBNは必須です");
+                errIsbnFlg = true; 
+            }
+
+                // ISBNが空値かどうかチェック
+            if (isbn.trim().isEmpty()){
+                result.rejectValue("isbn", "error.value", "ISBNは必須です");
+            }
+
+                // ISBNが半角数字のみで構成されているかをチェック            
+            if (!isbn.matches("\\d+")) {
+                    result.rejectValue("isbn", "error.numeric", "ISBNは半角数字で入力してください");
+                    errIsbnFlg = true;
+            }
+            
+                // ISBNが13桁であるかをチェック           
+            if (isbn.length() != 13) {
+                    result.rejectValue("isbn", "error.length", "ISBNは13桁で入力してください");
+                    errIsbnFlg = true;
+            }      
+
+            List<BookMst> exist = this.bookMstService.selectByIsbn(bookMstDto.getIsbn());
+            if (exist.size() != 0) {
+                result.rejectValue("isbn", "error.length", "登録済みのISBNです");
+                errIsbnFlg = true;
+                }
+
+                //何か一つでもエラーだとエラー扱いにする
+            if (errTitleFlg || errIsbnFlg) {
+                return "book/add" ;
+            }
+
+            bookMstService.save(bookMstDto);
+
+            return "redirect:/book/index/";//書籍一覧画面
+
+            } catch (Exception e) {
+    log.error(e.getMessage());
+    ra.addFlashAttribute("bookMstDto", bookMstDto);
+    ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMstDto", result);
+
+    return "redirect:/book/add";
+  }
+ }
 }

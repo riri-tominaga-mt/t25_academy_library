@@ -11,16 +11,46 @@
     <div class="contents">
         <div th:replace="~{common :: main_sidebar}"></div>
         <div class="main_contents">
+        
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
                 <div class="page_title">書籍登録</div>
                 <div class="page_contents">
+
                     <form id="book_register_form" th:object="${bookMstDto}" th:action="@{/book/add}" method="post">
-                        <div class="mb30 flexarea">
-                            <span>
-                                <a th:href="@{/book/index}" class="link">← 一覧へ戻る</a>
+                        <div class="mb30 flexarea" style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                            <span style="color: red;" >*は必須項目です</span></th>
+                            <a th:href="@{/book/index}" class="link" style="float: right;">← 一覧へ戻る</a>
                             </span>
                         </div>
+
+                        <th scope="book_name">書籍名</th><span style="color: red;" >*</span></th>
+
+                        <td>                           
+                            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red;"></div>
+                        </td>
+
+                        <label for="name"></label>
+                        <input type="text" id="name" name="title" placeholder="書籍名を入力" required size="100" maxlength="255">
+                      
+                    </br>
+                </br>
+
+                        <th scope="isbn">ISBN</th><span style="color: red;" >*</span></th>
+
+                        <td>                 
+                            <div th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" style="color: red;"></div>
+                        </td>
+
+
+                        <input type="text" id="name" name="isbn" placeholder="ISBNを入力" required size="100" maxlength="13">
+                    
+                    </br>
+                </br>
+
+                      <div align="center" class="btn_block">
+                        <input type="submit" value="保存">
+                    </div>
                     </form>
                 </div>
             </div>
