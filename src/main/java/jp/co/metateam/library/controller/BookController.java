@@ -57,7 +57,7 @@ public class BookController {
  @PostMapping("/book/add")
     public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra, Model model) {
 
-try {
+            try {
             boolean errTitleFlg = false;
             boolean errIsbnFlg = false;
             String title = bookMstDto.getTitle();
@@ -74,7 +74,7 @@ try {
                 errTitleFlg = true;
             }
                 // ISBNがnullかチェック
-            if(isbn != null){
+            if(isbn == null){
                 result.rejectValue("isbn", "error.value", "ISBNは必須です");
                 errIsbnFlg = true; 
             }
@@ -111,7 +111,7 @@ try {
 
             return "redirect:/book/index/";//書籍一覧画面
 
- } catch (Exception e) {
+            } catch (Exception e) {
     log.error(e.getMessage());
     ra.addFlashAttribute("bookMstDto", bookMstDto);
     ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMstDto", result);
