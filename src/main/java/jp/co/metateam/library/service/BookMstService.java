@@ -27,11 +27,10 @@ public class BookMstService {
         this.bookMstRepository = bookMstRepository;
         
     }
-    
-public List<BookMst> selectByIsbn (String isbn){
-    return this.bookMstRepository.selectByIsbn(isbn);
-}
 
+    public BookMst selectByIsbn(String isbn) {
+    return this.bookMstRepository.findByIsbn(isbn).orElse(null);
+}
     public List<BookMstDto> findAvailableWithStockCount() {
         List<BookMst> books = this.bookMstRepository.findLimitedBook();
         List<BookMstDto> bookMstDtoList = new ArrayList<BookMstDto>();

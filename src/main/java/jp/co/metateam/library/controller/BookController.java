@@ -75,14 +75,9 @@ public class BookController {
             }
             
                 // ISBNがnullかチェック
-            if(isbn == null){
+            if(isbn == null || isbn.trim().isEmpty()){
                 result.rejectValue("isbn", "error.value", "ISBNは必須です");
                 errIsbnFlg = true; 
-            }
-
-                // ISBNが空値かどうかチェック
-            if (isbn.trim().isEmpty()){
-                result.rejectValue("isbn", "error.value", "ISBNは必須です");
             }
 
                 // ISBNが半角数字のみで構成されているかをチェック            
@@ -97,11 +92,11 @@ public class BookController {
                     errIsbnFlg = true;
             }      
 
-            List<BookMst> exist = this.bookMstService.selectByIsbn(bookMstDto.getIsbn());
-            if (exist.size() != 0) {
-                result.rejectValue("isbn", "error.length", "登録済みのISBNです");
-                errIsbnFlg = true;
-                }
+            if (bookMstService.selectByIsbn(bookMstDto.getIsbn()) != null) {
+                result.rejectValue("isbn", "error.value", "登録済みのISBNです");
+ 
+            }
+
 
                 //何か一つでもエラーだとエラー扱いにする
             if (errTitleFlg || errIsbnFlg) {

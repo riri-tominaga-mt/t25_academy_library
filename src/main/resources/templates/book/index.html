@@ -53,6 +53,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="bookMst : ${bookMstList}">
+                            
                             <td>
                                 <a th:href="@{'/books/edit/' + ${bookMst.id}}" style="margin-right: 10px;">✍</a>
                                 <form th:action="@{'/books/delete/' + ${bookMst.id}}" method="post" style="display:inline;">

@@ -31,7 +31,7 @@
                         </td>
 
                         <label for="name"></label>
-                        <input type="text" id="name" name="title" placeholder="書籍名を入力" required size="100" >
+                        <input type="text" th:field="*{title}" placeholder="書籍名を入力"  size="100">
                       
                     </br>
                 </br>
@@ -42,9 +42,9 @@
                             <div th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" style="color: red;"></div>
                         </td>
 
+                        
+                        <input type="text" th:field="*{isbn}" placeholder="ISBNを入力" size="100" maxlength="13">
 
-                        <input type="text" id="name" name="isbn" placeholder="ISBNを入力" required size="100" maxlength="13">
-                    
                     </br>
                 </br>
 
