@@ -1,84 +1,68 @@
 .books_table {
- width: 100%;
- text-align: left;
- border-collapse: collapse;
- border-spacing: 0;
- border-radius:10px;
-}
-
-.books_table th{
-  padding: 10px;
-  background: rgba(0,0,0,0.06);
-  padding: 13px;
-  border: solid 1px #B9B9B9;
-  color: #545454;
-  font-size: 18px;
-}
-
-.books_table td{
+  width: 50%;
   text-align: left;
-  vertical-align: top;
-  background: #FFFFFF;
-  border: solid 1px #B9B9B9;
-  padding: 13px;
-  font-size: 20px;
-}
-
-.books_table td:nth-child(1){
-  width: 40%;
-}
-
-.books_table td:nth-child(1) .book_title_contents{
-  display: flex;
-  align-items: center;
-}
-
-.books_table td:nth-child(1) .book_title_contents span{
-  display: inline-block;
-  margin-left:10px;
-}
-
-.books_table td .stockcount{
-  display: inline-block;
-  width: 50px;
-  text-align: center;
-}
-
-.books_table td img{
-  margin: 8px 2px 0 2px;
-  height: auto;
-}
-.books_table td img:hover{
-  cursor: pointer;
-  opacity: 0.6;
-}
-.books_table td .edit_icon{
-  width:23px;
-}
-.books_table td .trash_icon{
-  width:19px;
-}
-
-.books_table td a{
-  color: #0000EE;
-}
-
-.books_table {
-  width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  border: 1px solid #999;
-}
-
-.books_table th,
-.books_table td {
-  border: 1px solid #CCC;
-  padding: 8px 12px;
-  text-align: left;
-  background-color: #fff;
-}
-
-.books_table th{
-  background-color: #f5f5f5;
-  font-weight: bold;
-}
+  border-spacing: 0;
+  border-radius:10px;
+  margin: 0 auto;
+  margin-top: 100px;
+  margin-bottom: 100px;
+ }
+  
+ .books_table th{
+   padding: 10px;
+   background: rgba(66, 50, 50, 0.06);
+   padding: 13px;
+   border: solid 1px #B9B9B9;
+   color: #545454;
+   font-size: 14px;
+ }
+  
+ .books_table td{
+   text-align: left;
+   vertical-align: top;
+   background: #FFFFFF;
+   border: solid 1px #B9B9B9;
+   padding: 13px;
+   font-size: 10px;
+ }
+  
+ .books_table td:nth-child(1){
+   width: 60%;
+ }
+  
+ .books_table td:nth-child(1) .book_title_contents{
+   display: flex;
+   align-items: center;
+ }
+  
+ .books_table td:nth-child(1) .book_title_contents span{
+   display: inline-block;
+   margin-left:10px;
+ }
+  
+ .books_table td .stockcount{
+   display: inline-block;
+   width: 50px;
+   text-align: center;
+ }
+  
+ .books_table td img{
+   margin: 8px 2px 0 2px;
+   height: auto;
+ }
+ .books_table td img:hover{
+   cursor: pointer;
+   opacity: 0.6;
+ }
+ .books_table td .edit_icon{
+   width:23px;
+ }
+ .books_table td .trash_icon{
+   width:19px;
+ }
+  
+ .books_table td a{
+   color: #0018ee;
+ }
+  

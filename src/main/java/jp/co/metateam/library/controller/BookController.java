@@ -69,10 +69,11 @@ public class BookController {
                 errTitleFlg = true; //エラーだったらtrue
             }
                 //書籍名255文字以内かチェック
-            if (title.length() > 255) {
+            if(title.length() > 255) {
                 result.rejectValue("title", "error.length", "書籍名は255文字以内で入力してください");
                 errTitleFlg = true;
             }
+            
                 // ISBNがnullかチェック
             if(isbn == null){
                 result.rejectValue("isbn", "error.value", "ISBNは必須です");
@@ -85,13 +86,13 @@ public class BookController {
             }
 
                 // ISBNが半角数字のみで構成されているかをチェック            
-            if (!isbn.matches("\\d+")) {
+            else if (!isbn.matches("\\d+")) {
                     result.rejectValue("isbn", "error.numeric", "ISBNは半角数字で入力してください");
                     errIsbnFlg = true;
             }
             
                 // ISBNが13桁であるかをチェック           
-            if (isbn.length() != 13) {
+            else if (isbn.length() != 13) {
                     result.rejectValue("isbn", "error.length", "ISBNは13桁で入力してください");
                     errIsbnFlg = true;
             }      
@@ -109,14 +110,15 @@ public class BookController {
 
             bookMstService.save(bookMstDto);
 
-            return "redirect:/book/index/";//書籍一覧画面
+            return "redirect:/book/index";//書籍一覧画面
 
-            } catch (Exception e) {
-    log.error(e.getMessage());
-    ra.addFlashAttribute("bookMstDto", bookMstDto);
-    ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMstDto", result);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            ra.addFlashAttribute("bookMstDto", bookMstDto);
+            ra.addFlashAttribute("org.springframework.validation.BindingResult.bookMstDto", result);
 
-    return "redirect:/book/add";
-  }
- }
+            return "redirect:/book/add";
+        }
+    }
 }
+            
