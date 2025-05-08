@@ -12,9 +12,39 @@
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
                 <div class="page_title">書籍一覧</div>
-                <div class="btn_block">
-                    <input type="submit" value="書籍登録">
-                </div>
+                
+                
+                <head>
+                    <style>
+                        .index_button {
+                            background-color: #3fb5d0; /* 水色 */
+                            color: white; /* 文字色 */
+                            padding: 12px 24px;
+                            border: none;
+                            border-radius: 8px; /* 角を丸く */
+                            font-size: 16px;
+                            cursor: pointer;
+                            transition: background-color 0.3s ease, transform 0.2s ease;
+                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        }
+                
+                        .index_button:hover {
+                            background-color: #45a049;
+                            transform: scale(1.05); /* 少し大きくなる */
+                        }
+                
+                        .button {
+                            text-align: right; /* 右揃え */
+                            margin-top: 40px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="button">
+                        <button type="button" class="index_button" onclick="location.href='http://localhost:8080/mt_library/book/add'">+書籍登録</button>
+                    </div>
+                </body>
+                
                 <table class="books_table">
                         <tr>
                             <th>書籍名</th>
@@ -23,12 +53,19 @@
                     </thead>
                     <tbody>
                         <tr th:each="bookMst : ${bookMstList}">
-                            <td th:text="${bookMst.title}">書籍タイトル</td>
+                            
+                            <td>
+                                <a th:href="@{'/books/edit/' + ${bookMst.id}}" style="margin-right: 10px;">✍</a>
+                                <form th:action="@{'/books/delete/' + ${bookMst.id}}" method="post" style="display:inline;">
+                                    <button type="submit" onclick="return confirm('本当に削除しますか？')"></button>
+                                </form>
+                                <span th:text="${bookMst.title}">書籍タイトル</span>
+                            </td>
                             <td th:text="${bookMst.isbn}">ISBNコード</td>
                         </tr>
                     </tbody>
                 </table>
-         
+                
             </div>
         </div>
     </div>

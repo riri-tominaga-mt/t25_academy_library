@@ -58,10 +58,10 @@ public class RegisterController {
             }
             if(employeeExist != null){
                 result.rejectValue("employeeId", "error.value", "登録済みの社員番号です");
-                errEmpIdFlg = true;
+                errEmpIdFlg = true; //エラーだったらtrue
             }
             if (errEmailFlg || errEmpIdFlg) {
-                throw new Exception("Account already exists.");
+                throw new Exception("Account already exists."); //何か一つでもエラーだとエラー扱い
             }
 
             accountService.save(accountDto);
