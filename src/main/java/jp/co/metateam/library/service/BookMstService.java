@@ -64,7 +64,32 @@ public class BookMstService {
             throw e;
         }
     }
+    public BookMst selectById(Long id) {
+        return bookMstRepository.findById(id).orElse(null);
+    }
+    
+      //編集してアップデート
+      @Transactional
+      public boolean update(BookMst bookMst) {
+          // 既存の書籍情報を取得
+          BookMst existingBook = bookMstRepository.findById(bookMst.getId()).orElse(null);
+      
+          if (existingBook != null) {
+              // 既存の情報を更新
+              existingBook.setTitle(bookMst.getTitle());
+              existingBook.setIsbn(bookMst.getIsbn());
+              
+              // 更新内容を保存
+              bookMstRepository.save(existingBook);
+              return true;
+          }
+          
+          return false; // 書籍が存在しない場合
+      }
+
+
 }
+
 
 
 
