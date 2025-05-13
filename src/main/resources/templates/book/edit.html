@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common :: meta_header('書籍編集',~{::link},~{::script})}">
+    <title th:text="'書籍編集 | MTLibrary'">書籍編集 | MTLibrary</title>
+    <link rel="stylesheet" th:href="@{/css/book/index.css}" />
+    <script type="text/javascript" th:src="@{/js/book/index.js}"></script>
+</head>
+<body>
+    <div class="contents">
+        <!-- サイドバー -->
+        <div th:replace="~{common :: main_sidebar}"></div>
+ 
+        <!-- メインコンテンツ -->
+        <div class="main_contents">
+            <!-- ヘッダー -->
+            <div th:replace="~{common :: header}"></div>
+ 
+            <div class="inner_contens">
+                <div class="page_title">書籍編集</div>
+ 
+                <div class="page_contents">
+                    <!-- エラーメッセージがある場合に表示 -->
+                    
+                    <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
+                    <p th:text="${errorMessage}"></p>
+                    </div>
+
+ 
+                    <!-- bookが存在する場合にフォームを表示 -->
+                    <div th:if="${book != null}">
+                       
+                       
+                        <form th:action="@{/book/edit}" th:object="${book}" method="post">
+                            <input type="hidden" th:field="*{id}" />
+                        
+                            <label>書籍名:</label>
+                            <input type="text" th:field="*{title}" />
+                            <div th:errors="*{title}" style="color: red; font-size: 0.9em;"></div>
+
+                            <label>ISBN:</label>
+                            <input type="text" th:field="*{isbn}" />
+                            <div th:errors="*{isbn}" style="color: red; font-size: 0.9em;"></div>
+
+                            <button type="submit">更新</button>
+                        </form>
+ 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <!-- フッター -->
+    <div th:replace="~{common :: footer}"></div>
+</body>
+</html>
