@@ -1,48 +1,58 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{common :: meta_header('書籍編集',~{::link},~{::script})}">
-    <title th:text="'書籍編集 | MTLibrary'">書籍編集 | MTLibrary</title>
-    <link rel="stylesheet" th:href="@{/css/book/index.css}" />
-    <script type="text/javascript" th:src="@{/js/book/index.js}"></script>
+
+    <head th:replace="~{common :: meta_header('書籍編集',~{::link},~{::script})}">
+    <title th:text="${title}+' | MTLibrary'"></title>
+    <link rel="stylesheet" th:href="@{/css/book/edit.css}" />
+    <script type="text/javascript" th:src="@{/js/book/edit.js}"></script>
 </head>
+
 <body>
     <div class="contents">
-        <!-- サイドバー -->
         <div th:replace="~{common :: main_sidebar}"></div>
- 
-        <!-- メインコンテンツ -->
         <div class="main_contents">
-            <!-- ヘッダー -->
+        
             <div th:replace="~{common :: header}"></div>
- 
             <div class="inner_contens">
                 <div class="page_title">書籍編集</div>
- 
                 <div class="page_contents">
+
+                    <div class="mb30 flexarea" style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+    <th style="text-align: left;">
+        <span style="color: red;">*は必須項目です</span>
+    </th>
+    <a th:href="@{/book/index}" class="link" style="float: right;">← 一覧へ戻る</a>
+</div>
+
+
                     <!-- エラーメッセージがある場合に表示 -->
                     
                     <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
                     <p th:text="${errorMessage}"></p>
                     </div>
-
  
                     <!-- bookが存在する場合にフォームを表示 -->
                     <div th:if="${book != null}">
                        
+                    <form th:action="@{/book/edit}" th:object="${book}" method="post" id="book_register_form">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <th scope="book_name">書籍名</th><span style="color: red;" >*</span></th>
+                        <input type="text" th:field="*{title}" size="100" class="form_input" placeholder="書籍名を入力" />
+                        <div th:errors="*{title}" style="color: red; font-size: 0.9em;"></div>
+
+                        <th scope="isbn">ISBN</th><span style="color: red;" >*</span></th>
+                        <input type="text" th:field="*{isbn}" size="100" class="form_input" placeholder="ISBNを入力" />
+                        <div th:errors="*{isbn}" style="color: red; font-size: 0.9em;"></div>
+
+                        <div class="btn_block" style="display: flex; justify-content: center; margin-top: 50px;">
+                            <button type="submit" class="button-cute">更新</button>
+
+                        </div>
+
+                    </form>
+
                        
-                        <form th:action="@{/book/edit}" th:object="${book}" method="post">
-                            <input type="hidden" th:field="*{id}" />
-                        
-                            <label>書籍名:</label>
-                            <input type="text" th:field="*{title}" />
-                            <div th:errors="*{title}" style="color: red; font-size: 0.9em;"></div>
-
-                            <label>ISBN:</label>
-                            <input type="text" th:field="*{isbn}" />
-                            <div th:errors="*{isbn}" style="color: red; font-size: 0.9em;"></div>
-
-                            <button type="submit">更新</button>
-                        </form>
  
                     </div>
                 </div>
