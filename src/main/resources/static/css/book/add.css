@@ -38,3 +38,22 @@
   cursor: pointer;
   opacity: 0.6;
 }
+
+/* かわいいボタン用 */
+.button-cute {
+  background-color: #ffb6c1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.button-cute:hover {
+  background-color: #ffa7c4;
+  opacity: 0.9;
+}
