@@ -24,6 +24,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/register", "/error").permitAll()
+                .requestMatchers("/books/delete/**").permitAll() //削除機能
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated()
             )

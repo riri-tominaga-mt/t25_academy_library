@@ -1,5 +1,6 @@
 package jp.co.metateam.library.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.service.BookMstService;
 import lombok.extern.log4j.Log4j2;
 
+import java.sql.Timestamp;
+
 @Controller
 @Log4j2
 public class BookController {
@@ -29,7 +32,7 @@ public class BookController {
         this.bookMstService = bookMstService;
     }
 
-    // ✅ 共通バリデーションメソッド
+    // バリデーション
     private void validateBookDto(BookMstDto bookDto, BindingResult result) {
         String title = bookDto.getTitle();
         String isbn = bookDto.getIsbn();
@@ -45,12 +48,14 @@ public class BookController {
         } else {
             if (!isbn.matches("\\d+")) {
                 result.rejectValue("isbn", "error.numeric", "ISBNは半角数字で入力してください");
-            } else if (isbn.length() != 13) {
+            }
+            if (isbn.length() != 13) {
                 result.rejectValue("isbn", "error.length", "ISBNは13桁で入力してください");
             }
         }
     }
 
+    // 書籍一覧
     @GetMapping("/book/index")
     public String index(Model model) {
         List<BookMstDto> bookMstList = this.bookMstService.findAvailableWithStockCount();
@@ -59,6 +64,7 @@ public class BookController {
         return "book/index";
     }
 
+    // 書籍追加画面
     @GetMapping("/book/add")
     public String add(Model model) {
         if (!model.containsAttribute("bookMstDto")) {
@@ -67,15 +73,12 @@ public class BookController {
         return "book/add";
     }
 
+    // 書籍登録
     @PostMapping("/book/add")
     public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result,
                            RedirectAttributes ra, Model model) {
 
         validateBookDto(bookMstDto, result);
-
-        if (bookMstService.selectByIsbn(bookMstDto.getIsbn()) != null) {
-            result.rejectValue("isbn", "error.value", "登録済みのISBNです");
-        }
 
         if (result.hasErrors()) {
             return "book/add";
@@ -92,6 +95,7 @@ public class BookController {
         }
     }
 
+    // 書籍編集画面
     @GetMapping("/book/edit/{id}")
     public String editBook(@PathVariable("id") Long id, Model model) {
         BookMst book = bookMstService.selectById(id);
@@ -103,15 +107,16 @@ public class BookController {
         return "book/edit";
     }
 
+    // 書籍変更・削除
     @PostMapping("/book/edit")
     public String updateBook(@Valid @ModelAttribute("book") BookMstDto bookDto,
-                             BindingResult result, Model model , RedirectAttributes redirectAttributes) {
+                             BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         try {
+        //取得できなかった（= null） か、削除済み（deletedFlg == 1）の場合は、エラーメッセージを表示用に渡し、編集画面にリダイレクト
             BookMst original = bookMstService.selectById(bookDto.getId());
-            if (original == null) {
-                model.addAttribute("errorMessage", "この書籍は削除されています。");
-                model.addAttribute("book", bookDto);
-                return "book/edit";
+            if (original == null || original.getDeletedFlg() == 1) {
+                redirectAttributes.addFlashAttribute("errorMessage", "この書籍は削除されています。");
+                return "redirect:/book/edit/" + bookDto.getId();
             }
 
             if (original.getTitle().equals(bookDto.getTitle()) &&
@@ -121,12 +126,13 @@ public class BookController {
                 return "book/edit";
             }
 
+            // バリデーションチェック
             validateBookDto(bookDto, result);
 
-            //重複チェック（自分のISBNを変えなくてもエラーにしない）　
+            // ISBN重複チェック（自分以外のIDに同じISBNがないか）
             BookMst existing = bookMstService.selectByIsbn(bookDto.getIsbn());
             if (existing != null && !existing.getId().equals(bookDto.getId())) {
-            result.rejectValue("isbn", "error.value", "登録済みのISBNです");
+                result.rejectValue("isbn", "error.value", "登録済みのISBNです");
             }
 
             if (result.hasErrors()) {
@@ -145,10 +151,8 @@ public class BookController {
                 return "book/edit";
             }
 
-            //ポップアップ用
             redirectAttributes.addFlashAttribute("successMessage", "書籍が変更されました");
             return "redirect:/book/index";
-            
 
         } catch (Exception e) {
             log.error("更新処理中にエラーが発生しました", e);
@@ -156,5 +160,23 @@ public class BookController {
             model.addAttribute("book", bookDto);
             return "book/edit";
         }
+    }
+
+    // 書籍削除
+    @PostMapping("/books/delete/{id}")
+    public String deleteBook(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, Model model) {
+        BookMst book = bookMstService.selectById(id);
+
+        if (book == null || book.getDeletedFlg() == 1) {
+            redirectAttributes.addFlashAttribute("errorMessage", "この書籍はすでに削除されています。");
+            return "redirect:/book/index";
+        }
+
+        book.setDeletedFlg(true);
+        book.setDeletedAt(Timestamp.valueOf(LocalDateTime.now()));
+        bookMstService.update(book);
+
+        redirectAttributes.addFlashAttribute("successMessage", "書籍を削除しました。");
+        return "redirect:/book/index";
     }
 }
