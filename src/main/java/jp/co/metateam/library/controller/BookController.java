@@ -168,6 +168,12 @@ public class BookController {
     public String deleteBook(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, Model model) {
         BookMst book = bookMstService.selectById(id);
 
+         // bookがnull（＝DBに存在しない）場合のチェックを追加
+    if (book == null) {
+        redirectAttributes.addFlashAttribute("errorMessage", "この書籍はすでに削除されています。");
+        return "redirect:/book/index";
+    }
+
             if (book.isDeletedFlg()) {
             redirectAttributes.addFlashAttribute("errorMessage", "この書籍はすでに削除されています。");
             return "redirect:/book/index";
