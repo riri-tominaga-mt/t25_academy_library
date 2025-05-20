@@ -1,73 +1,92 @@
 package jp.co.metateam.library.model;
 
 import java.sql.Timestamp;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
  * 書籍マスタ
  */
 @Entity
-@Table(name = "BookMst")
+@Table(name = "book_mst")
 public class BookMst {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    /** ISBN */
-    @Column(name = "isbn", nullable = false, unique = true)
-    private String isbn;
-
-    /** 書籍タイトル */
-    @Column(name = "title", nullable = false)
     private String title;
 
-    /** 削除日時 */
+    private String isbn;
+
+    @Column(name = "deleted_flg")
+    private boolean deletedFlg;
+
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
 
-    /** Getters */
-
+    // --- getter/setter ---
     public Long getId() {
         return this.id;
     }
 
-    public String getIsbn() {
-        return this.isbn;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
         return this.title;
     }
 
-    public Timestamp getDeletedAt() {
-        return this.deletedAt;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    /** Setters */
-
-    public void setId(Long id) {
-        this.id = id;
+    public String getIsbn() {
+        return this.isbn;
     }
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public boolean isDeletedFlg() {
+    return deletedFlg;
+    }
+
+    public void setDeletedFlg(boolean deletedFlg) {
+    this.deletedFlg = deletedFlg;
+    }
+
+
+    public Timestamp getDeletedAt() {
+        return deletedAt;
     }
 
     public void setDeletedAt(Timestamp deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    // 編集画面データ用の内部クラス（分けるのが理想）
+    public class BookMstDto {
+        private Long id;
+        private String title;
+        private String isbn;
+
+        public BookMstDto() {}
+
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+
+        public String getTitle() { return title; }
+        public void setTitle(String title) { this.title = title; }
+
+        public String getIsbn() { return isbn; }
+        public void setIsbn(String isbn) { this.isbn = isbn; }
     }
 }

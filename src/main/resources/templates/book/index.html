@@ -61,21 +61,21 @@
                                
                                 <a th:href="@{/book/edit/{id}(id=${bookMst.id})}" style="margin-right: 10px;">✍</a>
                                
- 
-                               
                                 <head>
                                     <!-- Font AwesomeのCSSをCDNで読み込み -->
                                     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
                                 </head>
                                
+                                 <!-- 削除機能 -->
                                 <form th:action="@{'/books/delete/' + ${bookMst.id}}" method="post" style="display:inline;">
-                                    <button type="submit" onclick="return confirm('本当に削除しますか？')" style="border:none; background:none; cursor:pointer;">
-                                        <!-- ごみ箱アイコン -->
-                                        <i class="fas fa-trash" style="font-size: 15px; color: rgb(120, 117, 117);"></i>
-                                    </button>
+                                
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                
+                                <button type="submit" onclick="return confirm('本当に削除しますか？')" style="border:none; background:none; cursor:pointer;">
+                                <!-- ごみ箱アイコン -->
+                                <i class="fas fa-trash" style="font-size: 15px; color: rgb(120, 117, 117);"></i>
+                                </button>
                                 </form>
-                               
- 
                              
                                 <span th:text="${bookMst.title}">書籍タイトル</span>
                             </td>
@@ -86,7 +86,7 @@
                 </table>
            
             <div th:if="${successMessage}" class="success-message">
-                <p th:text="${successMessage}"></p>
+    
             </div>
            
             </div>
@@ -94,39 +94,56 @@
     </div>
     <div th:replace="~{common :: footer}"></div>
 
-     <!-- ポップアップメッセージ用 -->
-<div id="popup-message" 
-     th:if="${successMessage}" 
-     th:text="${successMessage}" 
-     style="
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d4edda;
-        color: #155724;
-        padding: 20px 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        font-size: 18px;
-        z-index: 9999;
-     ">
+<!-- 削除成功メッセージポップアップ -->
+<div id="popup-message"
+     th:if="${successMessage}"
+     th:text="${successMessage}"
+     style="display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #d4edda;
+            color: #155724;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            font-size: 18px;
+            z-index: 9999;">
 </div>
 
-<!-- ポップアップメッセージ用 -->
+<!-- 削除済みエラーメッセージポップアップ -->
+<div id="popup-error"
+     th:if="${errorMessage}"
+     th:text="${errorMessage}"
+     style="display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            font-size: 18px;
+            z-index: 9999;">
+</div>
+
+<!-- 共通スクリプト -->
 <script>
   window.addEventListener('DOMContentLoaded', function () {
-    const popup = document.getElementById('popup-message');
-    if (popup) {
-      popup.style.display = 'block';
-      // 3秒後にフェードアウト（必要なら）
-      setTimeout(() => {
-        popup.style.transition = "opacity 0.5s";
-        popup.style.opacity = 0;
-        setTimeout(() => popup.remove(), 500);
-      }, 3000);
-    }
+    ['popup-message', 'popup-error'].forEach(function(id) {
+      const popup = document.getElementById(id);
+      if (popup) {
+        popup.style.display = 'block';
+        setTimeout(() => {
+          popup.style.transition = "opacity 0.5s";
+          popup.style.opacity = 0;
+          setTimeout(() => popup.remove(), 500);
+        }, 3000);
+      }
+    });
   });
 </script>
 
