@@ -80,6 +80,7 @@ public class BookController {
 
         validateBookDto(bookMstDto, result);
 
+     
         if (result.hasErrors()) {
             return "book/add";
         }
@@ -114,7 +115,7 @@ public class BookController {
         try {
         //取得できなかった（= null） か、削除済み（deletedFlg == 1）の場合は、エラーメッセージを表示用に渡し、編集画面にリダイレクト
             BookMst original = bookMstService.selectById(bookDto.getId());
-            if (original == null || original.getDeletedFlg() == 1) {
+            if (original.isDeletedFlg()) {
                 redirectAttributes.addFlashAttribute("errorMessage", "この書籍は削除されています。");
                 return "redirect:/book/edit/" + bookDto.getId();
             }
@@ -167,7 +168,7 @@ public class BookController {
     public String deleteBook(@PathVariable("id") Long id, RedirectAttributes redirectAttributes, Model model) {
         BookMst book = bookMstService.selectById(id);
 
-        if (book == null || book.getDeletedFlg() == 1) {
+            if (book.isDeletedFlg()) {
             redirectAttributes.addFlashAttribute("errorMessage", "この書籍はすでに削除されています。");
             return "redirect:/book/index";
         }

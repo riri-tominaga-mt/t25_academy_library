@@ -25,7 +25,7 @@ public class BookMst {
     private String isbn;
 
     @Column(name = "deleted_flg")
-    private int deletedFlg;
+    private boolean deletedFlg;
 
     @Column(name = "deleted_at")
     private Timestamp deletedAt;
@@ -55,14 +55,14 @@ public class BookMst {
         this.isbn = isbn;
     }
 
-    public int getDeletedFlg() {
-        return deletedFlg;
+    public boolean isDeletedFlg() {
+    return deletedFlg;
     }
 
-    public void setDeletedFlg(boolean deleted) {
-    this.deletedFlg = deleted ? 1 : 0;
+    public void setDeletedFlg(boolean deletedFlg) {
+    this.deletedFlg = deletedFlg;
     }
-    
+
 
     public Timestamp getDeletedAt() {
         return deletedAt;

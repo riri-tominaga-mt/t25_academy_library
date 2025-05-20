@@ -72,7 +72,7 @@ public class BookMstService {
     @Transactional
 public boolean logicalDelete(Long id) {
     BookMst book = bookMstRepository.findById(id).orElse(null);
-    if (book != null && book.getDeletedFlg() == 0) {
+    if (book != null && book.isDeletedFlg()) {
         book.setDeletedFlg(true); // ← ここを true に直す！
         book.setDeletedAt(Timestamp.valueOf(LocalDateTime.now()));
         bookMstRepository.save(book);
